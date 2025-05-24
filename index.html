@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Group Finder</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/components.css">
+
+    <script type="module" src="scripts/utils.js" defer></script>
+    <script type="module" src="scripts/Data.js" defer></script>
+    <script type="module" src="scripts/auth.js" defer></script>
+    <script type="module" src="scripts/ui.js" defer></script>
+    <script type="module" src="scripts/app.js" defer></script>
+</head>
+<body>
+    <header class="app-header">
+        <h1 class="app-title">Study Group Finder</h1>
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox" />
+                <div class="slider round"></div>
+            </label>
+            <span class="theme-text">Dark Mode</span>
+        </div>
+    </header>
+
+    <main id="app-container">
+        <p class="loading-text">Loading application...</p>
+    </main>
+
+    <footer class="app-footer">
+        <p>&copy; 2025 Study Group Finder. All rights reserved.</p>
+    </footer>
+</body>
+</html>

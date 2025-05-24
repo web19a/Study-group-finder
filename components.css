@@ -1,0 +1,568 @@
+/* --- Buttons --- */
+.btn {
+    padding: 0.8rem 1.8rem;
+    border: none;
+    border-radius: 8px; /* Slightly more rounded */
+    cursor: pointer;
+    font-weight: 700; /* Bold */
+    font-size: 1rem;
+    transition: background-color var(--transition-speed), transform 0.2s ease-out, box-shadow var(--transition-speed);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
+}
+
+.btn-primary:hover {
+    /* Uses CSS color-mix for subtle darkening. Fallback might be needed for older browsers. */
+    background-color: color-mix(in srgb, var(--primary-color) 85%, black);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: var(--button-text-color);
+}
+
+.btn-secondary:hover {
+    /* Uses CSS color-mix for subtle darkening. Fallback might be needed for older browsers. */
+    background-color: color-mix(in srgb, var(--secondary-color) 85%, black);
+}
+
+
+/* --- Authentication Section --- */
+.auth-form-section {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    margin: 3rem auto;
+    text-align: center;
+    transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.auth-form-section h2 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    font-weight: 800; /* Bold typography */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- Auth Tabs --- */
+.auth-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tab-button {
+    background-color: transparent;
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: color var(--transition-speed), border-bottom var(--transition-speed);
+    position: relative;
+    top: 2px; /* Adjust to align with border */
+    outline: none; /* Remove blue outline on focus */
+}
+
+.tab-button.active {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
+    font-weight: 700;
+}
+
+.tab-button:hover:not(.active) {
+    color: var(--secondary-color);
+}
+
+/* --- Forms (General Styling for Inputs, Textareas, Selects) --- */
+/* This applies to both auth-form and app-form fields */
+.auth-form input[type="text"],
+.auth-form input[type="password"],
+.app-form input[type="text"],
+.app-form input[type="number"],
+.app-form input[type="time"],
+.app-form textarea,
+.app-form select {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    background-color: var(--input-background);
+    color: var(--text-color);
+    font-size: 1rem;
+    transition: border-color var(--transition-speed), box-shadow 0.2s ease-out;
+    outline: none;
+    -webkit-appearance: none; /* Remove default styling for select/number inputs */
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.auth-form input[type="text"]:focus,
+.auth-form input[type="password"]:focus,
+.app-form input[type="text"]:focus,
+.app-form input[type="number"]:focus,
+.app-form input[type="time"]:focus,
+.app-form textarea:focus,
+.app-form select:focus {
+    border-color: var(--primary-color);
+    /* For rgba, ensure you have a --primary-color-rgb variable in :root in style.css, e.g., 76, 175, 80 for #4CAF50 */
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3); /* Using example RGB for now */
+}
+
+
+/* --- Auth Specific Form Styles --- */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-top: 1rem;
+}
+
+.form-group {
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.95rem;
+}
+
+/* Radio Button Group (for role selection) */
+.radio-group {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.radio-group input[type="radio"] {
+    display: none; /* Hide default radio button */
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    border: 1px solid var(--input-border);
+    transition: background-color var(--transition-speed), border-color var(--transition-speed);
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none; /* Standard syntax */
+}
+
+.radio-group label::before {
+    content: '';
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--secondary-color);
+    margin-right: 0.7rem;
+    transition: border-color var(--transition-speed), background-color var(--transition-speed);
+}
+
+.radio-group input[type="radio"]:checked + label::before {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    box-shadow: inset 0 0 0 4px var(--card-background); /* Inner dot effect */
+}
+
+.radio-group input[type="radio"]:checked + label {
+    background-color: var(--secondary-color);
+    color: var(--button-text-color);
+    border-color: var(--secondary-color);
+}
+
+/* --- Messages (Success/Error) --- */
+.message-text {
+    margin-top: 1rem;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: center;
+    opacity: 0; /* Hidden by default */
+    transform: translateY(10px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+.message-text.show { /* Class to add when message is visible */
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.message-text.success {
+    background-color: color-mix(in srgb, var(--success-color) 20%, transparent);
+    color: var(--success-color);
+    border: 1px solid var(--success-color);
+}
+
+.message-text.error {
+    background-color: color-mix(in srgb, var(--error-color) 20%, transparent);
+    color: var(--error-color);
+    border: 1px solid var(--error-color);
+}
+
+/* --- Dashboard Section --- */
+.dashboard-section {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 2.5rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    margin: 3rem auto;
+    transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.dashboard-section h2 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.8rem;
+    font-weight: 800;
+}
+
+.user-role {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    opacity: 0.8;
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
+
+.logout-btn {
+    float: right; /* Position logout button to the right */
+    margin-top: -3rem; /* Adjust position relative to h2 */
+    margin-right: 1rem;
+}
+
+.dashboard-nav {
+    display: flex;
+    justify-content: flex-start; /* Align tabs to the left */
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+/* Re-use .tab-button for dashboard nav - specificity makes this override global tab-button padding */
+.dashboard-nav .tab-button {
+    padding: 0.8rem 1.2rem; /* Slightly smaller padding for dashboard tabs */
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.dashboard-content {
+    padding-top: 1.5rem;
+    /* Styles for content loaded dynamically inside this div will go here */
+}
+
+/* --- Application Forms (e.g., Create Group Form) --- */
+.app-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding-top: 1rem;
+    margin-top: 1.5rem; /* Space below h3 */
+}
+
+.app-form textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 80px;
+}
+
+/* Styles for the Meeting Time inputs row */
+.meeting-time-inputs {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+.meeting-time-inputs select,
+.meeting-time-inputs input[type="time"] {
+    flex-grow: 1; /* Allow them to grow and fill space */
+    min-width: 120px; /* Ensure they don't get too small */
+}
+
+.meeting-time-inputs span {
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+/* Add specific h3 style for forms */
+.app-form h3 {
+    font-size: 1.8rem;
+    color: var(--secondary-color); /* Using secondary color for form titles */
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* ... existing styles ... */
+
+/* --- Groups Grid Layout --- */
+.groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* --- Group Card --- */
+.group-card {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 1.8rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background-color var(--transition-speed);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Pushes action buttons to bottom */
+}
+
+.group-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.group-card--private {
+    border: 2px solid var(--accent-color); /* Highlight private groups */
+}
+
+.group-card--joined {
+    border: 2px solid var(--primary-color); /* Highlight joined groups */
+}
+
+
+.group-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.group-card-header h3 {
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+    font-weight: 700;
+    margin: 0; /* Override default h3 margin */
+    line-height: 1.2;
+}
+
+.group-status-badge {
+    background-color: var(--accent-color);
+    color: var(--button-text-color);
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.group-card--private .group-status-badge {
+    background-color: var(--error-color);
+}
+
+.group-description {
+    font-size: 0.95rem;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    flex-grow: 1; /* Allows description to take available space */
+}
+
+.group-details p {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.group-details strong {
+    font-weight: 700;
+}
+
+.group-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap; /* Allow buttons to wrap */
+}
+
+/* Smaller buttons for group actions */
+.btn-group-action {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+.leave-group-btn {
+    background-color: var(--error-color);
+}
+
+.leave-group-btn:hover {
+    background-color: color-mix(in srgb, var(--error-color) 85%, black);
+}
+
+.teacher-options {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border-color);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+}
+
+/* Info text for empty states */
+.info-text {
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    margin-top: 2rem;
+    font-weight: 500;
+}
+
+/* Add a .dashboard-header to make space for the logout button */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Align top of text with button */
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-header h2 {
+    margin-bottom: 0.5rem; /* Reduce margin for h2 in header */
+}
+
+/* ... existing styles ... */
+
+/* --- Teacher Dashboard Specific Styles --- */
+.teacher-groups-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.teacher-group-card {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 1.8rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background-color var(--transition-speed);
+}
+
+.teacher-group-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.teacher-group-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.teacher-group-card-header h4 {
+    font-size: 1.3rem;
+    color: var(--primary-color); /* Use primary color for group titles in teacher dashboard */
+    font-weight: 700;
+    margin: 0;
+}
+
+.pending-requests-list {
+    margin-top: 1rem;
+    border-top: 1px dashed var(--border-color);
+    padding-top: 1rem;
+}
+
+.pending-requests-list h4 {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+}
+
+.pending-request-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: color-mix(in srgb, var(--accent-color) 5%, transparent); /* Light accent background */
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.7rem;
+    font-size: 0.95rem;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.pending-request-item:last-child {
+    margin-bottom: 0;
+}
+
+.request-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Specific button styles for request actions */
+.btn-request-action {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+}
+
+.btn-request-action.reject-btn {
+    background-color: var(--error-color);
+}
+.btn-request-action.reject-btn:hover {
+    background-color: color-mix(in srgb, var(--error-color) 85%, black);
+}
+
+.info-text-small {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.7;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+/* Style for messages that appear after an action, like "Request Accepted!" */
+.action-message-text {
+    margin-bottom: 1.5rem; /* Give it space above the content */
+    margin-top: 0; /* Override default message-text margin-top */
+}
