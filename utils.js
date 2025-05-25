@@ -68,7 +68,7 @@ export function removeItemFromLocalStorageArray(key, id) {
  * @param {'success' | 'error' | 'info'} type - The type of message.
  */
 export function showMessage(element, text, type) {
-    element.className = `message-text ${type}`; // Set initial type class
+    element.className = `messages-text ${type}`; // Set initial type class
     element.textContent = text;
     // Force reflow to ensure transition works
     void element.offsetWidth;
