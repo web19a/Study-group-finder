@@ -202,7 +202,7 @@
 }
 
 /* --- Messages (Success/Error) --- */
-.message-text {
+.messages-text {
     margin-top: 1rem;
     padding: 0.8rem 1.2rem;
     border-radius: 8px;
@@ -214,18 +214,18 @@
     transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 }
 
-.message-text.show { /* Class to add when message is visible */
+.messages-text.show { /* Class to add when message is visible */
     opacity: 1;
     transform: translateY(0);
 }
 
-.message-text.success {
+.messages-text.success {
     background-color: color-mix(in srgb, var(--success-color) 20%, transparent);
     color: var(--success-color);
     border: 1px solid var(--success-color);
 }
 
-.message-text.error {
+.messages-text.error {
     background-color: color-mix(in srgb, var(--error-color) 20%, transparent);
     color: var(--error-color);
     border: 1px solid var(--error-color);
@@ -565,4 +565,294 @@
 .action-message-text {
     margin-bottom: 1.5rem; /* Give it space above the content */
     margin-top: 0; /* Override default message-text margin-top */
+}
+
+/* ... existing styles ... */
+
+/* --- Created Groups List Layout (Replaces .teacher-groups-list) --- */
+.created-groups-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* --- Created Group Card (Replaces .teacher-group-card) --- */
+.created-group-card {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 1.8rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background-color var(--transition-speed);
+}
+
+.created-group-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.created-group-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.created-group-card-header h4 {
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Pending Requests List & Item (These styles remain the same, just ensured they are used by .created-group-card) */
+.pending-requests-list {
+    margin-top: 1rem;
+    border-top: 1px dashed var(--border-color);
+    padding-top: 1rem;
+}
+
+.pending-requests-list h4 {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+}
+
+.pending-request-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: color-mix(in srgb, var(--accent-color) 5%, transparent);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.7rem;
+    font-size: 0.95rem;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.pending-request-item:last-child {
+    margin-bottom: 0;
+}
+
+.request-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Button styles for request actions (remain same) */
+.btn-request-action {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+}
+
+.btn-request-action.reject-btn {
+    background-color: var(--error-color);
+}
+.btn-request-action.reject-btn:hover {
+    background-color: color-mix(in srgb, var(--error-color) 85%, black);
+}
+
+/* Info text styles (remain same) */
+.info-text {
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    margin-top: 2rem;
+    font-weight: 500;
+}
+
+.info-text-small {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    opacity: 0.7;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+/* Action message text (remain same) */
+.action-message-text {
+    margin-bottom: 1.5rem;
+    margin-top: 0;
+}
+
+/* --- Teacher Global Tools (New style for the simplified Teacher Dashboard) --- */
+.teacher-global-tools {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+    background-color: color-mix(in srgb, var(--primary-color) 5%, transparent);
+}
+
+.teacher-global-tools h4 {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.teacher-global-tools ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.teacher-global-tools ul li {
+    background-color: var(--input-background);
+    padding: 0.8rem;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid var(--input-border);
+    color: var(--text-color);
+    font-size: 0.95rem;
+}
+
+/* ... existing styles ... */
+
+/* --- Group Chat Styles --- */
+.group-chat-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 200px); /* Adjust height based on header/footer size */
+    background-color: var(--card-background);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden; /* For scrolling messages */
+    margin-top: 1.5rem;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+.chat-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.chat-messages {
+    flex-grow: 1; /* Takes up available vertical space */
+    padding: 1.5rem;
+    overflow-y: auto; /* Enable scrolling for messages */
+    display: flex;
+    flex-direction: column; /* Stack messages vertically */
+    gap: 0.8rem; /* Space between messages */
+}
+
+.chat-message {
+    max-width: 80%;
+    padding: 0.8rem 1.2rem;
+    border-radius: 18px;
+    word-wrap: break-word; /* Wrap long messages */
+    font-size: 0.95rem;
+    line-height: 1.4;
+    position: relative; /* For timestamp positioning */
+}
+
+.chat-message .sender-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+    display: block;
+    opacity: 0.8;
+}
+
+.chat-message .message-text {
+    margin: 0;
+    padding-bottom: 0.5rem; /* Space for timestamp */
+}
+
+.chat-message .message-timestamp {
+    font-size: 0.7rem;
+    color: var(--text-color);
+    opacity: 0.6;
+    position: absolute;
+    bottom: 5px;
+    right: 12px;
+}
+
+.chat-message.message-self {
+    align-self: flex-end; /* Align to right */
+    background-color: var(--accent-color);
+    color: white;
+    border-bottom-right-radius: 4px;
+    /* Specific styles for self-messages */
+}
+.chat-message.message-self .sender-name {
+    text-align: right;
+    color: rgba(255, 255, 255, 0.8);
+}
+.chat-message.message-self .message-timestamp {
+    color: rgba(255, 255, 255, 0.7);
+    left: 12px; /* Position timestamp on the left for self messages */
+    right: auto;
+}
+
+
+.chat-message.message-other {
+    align-self: flex-start; /* Align to left */
+    background-color: var(--input-background);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-bottom-left-radius: 4px;
+    /* Specific styles for other messages */
+}
+.chat-message.message-other .sender-name {
+    color: var(--secondary-color);
+}
+.chat-message.message-other .message-timestamp {
+    color: var(--text-color);
+    right: 12px; /* Position timestamp on the right for other messages */
+    left: auto;
+}
+
+
+.chat-input-area {
+    display: flex;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--card-background); /* Match card background */
+}
+
+.chat-input-area input[type="text"] {
+    flex-grow: 1;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--input-border);
+    border-radius: 25px;
+    margin-right: 0.8rem;
+    background-color: var(--input-background);
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.chat-input-area input[type="text"]::placeholder {
+    color: var(--placeholder-color);
+}
+
+.chat-input-area button {
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+}
+
+/* Back to groups button in chat header */
+.chat-header .btn-small {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    border-radius: 8px;
+}
+
+/* Ensure info-text-small from previous section looks okay in chat messages */
+.chat-messages .info-text-small {
+    padding: 1rem;
+    margin: auto; /* Center it */
 }
