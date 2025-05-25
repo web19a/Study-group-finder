@@ -1,5 +1,5 @@
 import { initLocalStorage, getThemePreference, setThemePreference, DATA_KEYS, addGroupMember, addJoinRequest, removeGroupMember, getGroups, saveGroups, getUsers, saveUsers, acceptJoinRequest, rejectJoinRequest } from './data.js';
-import { renderApp, renderAuthForm, renderDashboard, loadCreateGroupForm, loadAllGroups, loadJoinedGroups, loadTeacherDashboard } from './ui.js';
+import { renderApp, renderAuthForm, renderDashboard, loadCreateGroupForm, loadAllGroups, loadJoinedGroups, loadMyCreatedGroups, loadTeacherDashboard, loadGroupChat } from './ui.js'; // IMPORT loadGroupChat
 import { registerUser, loginUser, logoutUser, getCurrentUser } from './auth.js';
 import { showMessage, generateUniqueId } from './utils.js';
 
@@ -49,23 +49,12 @@ function attachFormListeners() {
                     showMessage(messageElement, 'Login successful!', 'success');
                     setTimeout(() => renderDashboard(user), 1000); // Redirect to dashboard
                     setTimeout(() => {
-                        // If teacher, default to teacher dashboard. Otherwise, all groups.
-                        if (user.role === 'teacher') {
-                             loadTeacherDashboard();
-                             // Ensure the tab is active if teacher dashboard is default
-                             const teacherTab = document.getElementById('teacherDashboardTab');
-                             if(teacherTab) {
-                                document.querySelectorAll('.dashboard-nav .tab-button').forEach(btn => btn.classList.remove('active'));
-                                teacherTab.classList.add('active');
-                             }
-                        } else {
-                            loadAllGroups();
-                            // Ensure allGroupsTab is active if student dashboard is default
-                            const allGroupsTab = document.getElementById('allGroupsTab');
-                            if(allGroupsTab) {
-                                document.querySelectorAll('.dashboard-nav .tab-button').forEach(btn => btn.classList.remove('active'));
-                                allGroupsTab.classList.add('active');
-                            }
+                        // Default load to 'All Groups' for all users after login/refresh
+                        loadAllGroups();
+                        const allGroupsTab = document.getElementById('allGroupsTab');
+                        if(allGroupsTab) {
+                            document.querySelectorAll('.dashboard-nav .tab-button').forEach(btn => btn.classList.remove('active'));
+                            allGroupsTab.classList.add('active');
                         }
                     }, 1200); // Load appropriate dashboard content after dashboard render
                 } else {
@@ -169,7 +158,7 @@ function attachFormListeners() {
             // Optionally clear form or redirect after success
             event.target.reset(); // Clear the form
             setTimeout(() => {
-                document.getElementById('allGroupsTab').click(); // Go to all groups
+                document.getElementById('myCreatedGroupsTab').click(); // Go to 'My Created Groups' after creating
             }, 1500);
         }
     });
@@ -207,6 +196,9 @@ function attachDashboardListeners() {
                 case 'createGroupTab':
                     loadCreateGroupForm();
                     break;
+                case 'myCreatedGroupsTab': // NEW: Load My Created Groups
+                    loadMyCreatedGroups();
+                    break;
                 case 'teacherDashboardTab':
                     loadTeacherDashboard();
                     break;
@@ -216,11 +208,10 @@ function attachDashboardListeners() {
         }
     });
 
-    // --- Group Action Buttons (Join, Request, Go to Chat, Leave) ---
+    // --- Group Action Buttons (Join, Request, Go to Chat, Leave, Accept/Reject) ---
     appContainer.addEventListener('click', (event) => {
         const target = event.target;
         const dashboardContent = document.getElementById('dashboardContent');
-        // Find or create a message element within the current dashboard view
         let messageElement = dashboardContent.querySelector('.action-message-text');
         if (!messageElement) {
             messageElement = document.createElement('p');
@@ -265,45 +256,129 @@ function attachDashboardListeners() {
                     }
                     break;
                 case 'goToChat':
-                    showMessage(messageElement, 'Going to chat... (Chat functionality coming soon!)', 'info');
-                    // TODO: Implement chat view rendering for the specific group
+                    loadGroupChat(groupId); // NEW: Load the chat interface
+                    // No message needed here, as the chat loads
                     break;
             }
         }
 
-        // Handle Teacher Request Actions (Accept/Reject)
+        // Handle Request Actions (Accept/Reject)
         if (target.classList.contains('btn-request-action')) {
             const action = target.dataset.action;
             const groupId = target.dataset.groupId;
-            const userId = target.dataset.userId; // The ID of the user whose request it is
+            const userId = target.dataset.userId;
 
-            if (currentUser.role !== 'teacher') {
-                showMessage(messageElement, 'Permission Denied: Only teachers can manage requests.', 'error');
+            // Retrieve users here to ensure it's defined within this scope
+            const allUsers = getUsers();
+
+            const groups = getGroups();
+            const group = groups.find(g => g.id === groupId);
+
+            if (!group || group.creatorId !== currentUser.id) {
+                showMessage(messageElement, 'Permission Denied: You are not the creator of this group.', 'error');
                 return;
             }
 
             switch (action) {
                 case 'acceptRequest':
                     if (acceptJoinRequest(groupId, userId)) {
-                        showMessage(messageElement, `Request from user ${userId} accepted!`, 'success');
-                        loadTeacherDashboard(); // Re-render teacher dashboard to update requests
+                        showMessage(messageElement, `Request from user ${allUsers.find(u=>u.id===userId).username} accepted!`, 'success');
+                        loadMyCreatedGroups();
                     } else {
                         showMessage(messageElement, 'Failed to accept request.', 'error');
                     }
                     break;
                 case 'rejectRequest':
                     if (rejectJoinRequest(groupId, userId)) {
-                        showMessage(messageElement, `Request from user ${userId} rejected.`, 'info');
-                        loadTeacherDashboard(); // Re-render teacher dashboard to update requests
+                        showMessage(messageElement, `Request from user ${allUsers.find(u=>u.id===userId).username} rejected.`, 'info');
+                        loadMyCreatedGroups();
                     } else {
                         showMessage(messageElement, 'Failed to reject request.', 'error');
                     }
                     break;
             }
         }
+
+        // --- Chat Specific Event Handlers ---
+        if (target.id === 'sendChatMessageBtn') {
+            const chatMessageInput = document.getElementById('chatMessageInput');
+
+            // --- CONSOLE.LOGS FOR DEBUGGING ---
+            console.log('1. chatMessageInput element:', chatMessageInput);
+            if (chatMessageInput) {
+                console.log('2. chatMessageInput.value (before trim):', chatMessageInput.value);
+            }
+
+            const messageText = chatMessageInput.value.trim();
+
+            // --- CONSOLE.LOGS FOR DEBUGGING ---
+            console.log('3. messageText (after trim):', messageText);
+
+            const chatContainer = target.closest('.group-chat-container');
+            const groupId = chatContainer ? chatContainer.dataset.groupId : null;
+
+            // --- CONSOLE.LOGS FOR DEBUGGING ---
+            console.log('4. groupId:', groupId);
+
+            if (messageText && groupId) {
+                // --- CONSOLE.LOGS FOR DEBUGGING ---
+                console.log('5. Calling addChatMessage with:', { groupId, senderId: currentUser.id, messageText });
+                addChatMessage(groupId, currentUser.id, messageText);
+                chatMessageInput.value = ''; // Clear input
+                const groups = getGroups();
+                const group = groups.find(g => g.id === groupId);
+                if (group) {
+                    renderChatMessages(group.id);
+                }
+            } else {
+                // --- CONSOLE.LOGS FOR DEBUGGING ---
+                console.log('6. Message cannot be sent: messageText empty or groupId null.', { messageText, groupId });
+                showMessage(messageElement, 'Message cannot be empty.', 'error');
+            }
+        }
+
+        if (event.target.id === 'backToJoinedGroupsBtn') {
+            loadJoinedGroups(); // Go back to joined groups
+            // Ensure the Joined Groups tab is active
+            const joinedGroupsTab = document.getElementById('joinedGroupsTab');
+            if(joinedGroupsTab) {
+                document.querySelectorAll('.dashboard-nav .tab-button').forEach(btn => btn.classList.remove('active'));
+                joinedGroupsTab.classList.add('active');
+            }
+        }
+    });
+
+    // Handle pressing Enter to send message
+    appContainer.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter' && event.target.id === 'chatMessageInput') {
+            document.getElementById('sendChatMessageBtn').click();
+        }
     });
 }
 
+// Function to add a chat message (kept here for simplicity as it's tied to UI interaction)
+function addChatMessage(groupId, senderId, text) {
+    const groups = getGroups();
+    const groupIndex = groups.findIndex(g => g.id === groupId);
+
+    if (groupIndex !== -1) {
+        const group = groups[groupIndex];
+        const newMessage = {
+            id: generateUniqueId(), // Unique ID for the message
+            senderId: senderId,
+            text: text, // This is the value being stored
+            timestamp: new Date().toISOString() // ISO string for easy sorting/display
+        };
+        group.chatMessages.push(newMessage);
+        // --- CONSOLE.LOGS FOR DEBUGGING ---
+        console.log('7. New message added to group:', newMessage);
+        console.log('8. Group chatMessages after add:', group.chatMessages);
+        saveGroups(groups); // Save updated groups to localStorage
+    } else {
+        // --- CONSOLE.LOGS FOR DEBUGGING ---
+        console.log('9. Group not found when trying to add message:', groupId);
+    }
+}
 
 // --- Initial Application Load ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -314,23 +389,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial load for dashboard content if user is already logged in
     const currentUser = getCurrentUser();
     if (currentUser) {
-        // If teacher, default to teacher dashboard. Otherwise, all groups.
-        if (currentUser.role === 'teacher') {
-             loadTeacherDashboard();
-             // Ensure the tab is active if teacher dashboard is default
-             const teacherTab = document.getElementById('teacherDashboardTab');
-             if(teacherTab) {
-                document.querySelectorAll('.dashboard-nav .tab-button').forEach(btn => btn.classList.remove('active'));
-                teacherTab.classList.add('active');
-             }
-        } else {
-            loadAllGroups();
-            // Ensure allGroupsTab is active if student dashboard is default
-            const allGroupsTab = document.getElementById('allGroupsTab');
-            if(allGroupsTab) {
-                document.querySelectorAll('.dashboard-nav .tab-button').forEach(btn => btn.classList.remove('active'));
-                allGroupsTab.classList.add('active');
-            }
+        // Default to loading 'All Groups' when dashboard is first shown
+        loadAllGroups();
+        // Ensure the 'All Groups' tab is marked active
+        const allGroupsTab = document.getElementById('allGroupsTab');
+        if(allGroupsTab) {
+            document.querySelectorAll('.dashboard-nav .tab-button').forEach(btn => btn.classList.remove('active'));
+            allGroupsTab.classList.add('active');
         }
     }
 
